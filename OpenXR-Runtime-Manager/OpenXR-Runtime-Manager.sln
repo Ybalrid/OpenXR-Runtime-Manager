@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenXR-Runtime-Manager", "OpenXR-Runtime-Manager\OpenXR-Runtime-Manager.csproj", "{42A9CD0F-5BBF-430F-A7EA-BEBF276955E0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{42A9CD0F-5BBF-430F-A7EA-BEBF276955E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42A9CD0F-5BBF-430F-A7EA-BEBF276955E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42A9CD0F-5BBF-430F-A7EA-BEBF276955E0}.Debug|x64.ActiveCfg = Debug|x64
+		{42A9CD0F-5BBF-430F-A7EA-BEBF276955E0}.Debug|x64.Build.0 = Debug|x64
+		{42A9CD0F-5BBF-430F-A7EA-BEBF276955E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42A9CD0F-5BBF-430F-A7EA-BEBF276955E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42A9CD0F-5BBF-430F-A7EA-BEBF276955E0}.Release|x64.ActiveCfg = Release|x64
+		{42A9CD0F-5BBF-430F-A7EA-BEBF276955E0}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EF97256E-FC56-4E1F-963A-C0B6250F009C}
+	EndGlobalSection
+EndGlobal

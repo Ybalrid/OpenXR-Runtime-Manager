@@ -26,17 +26,41 @@ namespace OpenXR_Runtime_Manager
 		public MainWindow()
 		{
 			InitializeComponent();
+			UpdateActiveRuntimeDisplay();
+			UpdateAvailalbeRuntimeList();
+		}
 
-			if(runtimeManager.HasActiveRuntime)
+		private void UpdateAvailalbeRuntimeList()
+		{
+			var availableRuntimeList = runtimeManager.AvailableRuntimeNames;
+			foreach (string name in availableRuntimeList)
 			{
-				var mainRuntime = runtimeManager.ActiveRuntime;
-				Debug.Print($"The system's main OpenXR runtime is {mainRuntime.Name}");
+				RuntimeList.Items.Add(name);
+				if (runtimeManager.HasActiveRuntime && name == runtimeManager.ActiveRuntime.Name)
+					RuntimeList.SelectedItem = name;
 			}
 		}
 
-		private void TestMe_Click(object sender, RoutedEventArgs e)
+		private void UpdateActiveRuntimeDisplay()
 		{
-			throw new NotImplementedException();
+			if (runtimeManager.HasActiveRuntime)
+			{
+				var mainRuntime = runtimeManager.ActiveRuntime;
+				Debug.Print($"The system's main OpenXR runtime is {mainRuntime.Name}");
+
+				RuntimeNameLabel.Text = mainRuntime.Name;
+				ManifestPathLabel.Text = Environment.ExpandEnvironmentVariables(mainRuntime.ManifestFilePath);
+				LibraryPathLabel.Text = mainRuntime.LibraryDLLPath;
+				VersionLabel.Text = mainRuntime.Version.ShortName;
+			}
+		}
+
+		private void ChangeSystemRuntime_OnClick(object sender, RoutedEventArgs e)
+		{
+			if (runtimeManager.SetRuntimeAsSystem(RuntimeList.SelectionBoxItem.ToString()))
+			{
+				UpdateActiveRuntimeDisplay();
+			}
 		}
 	}
 }

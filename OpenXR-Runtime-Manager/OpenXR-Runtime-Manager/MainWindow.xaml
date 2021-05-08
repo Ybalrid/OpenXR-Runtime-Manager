@@ -5,18 +5,62 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenXR_Runtime_Manager"
         mc:Ignorable="d"
-        Title="OpenXR Runtime Manager" Height="450" Width="400">
+        Title="OpenXR Runtime Manager" Height="300" Width="700">
     <Grid Margin="10">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="30" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Label>Active Runtime : </Label>
-        <Button Grid.Row="0" Grid.Column="1" Click="TestMe_Click">TestMe</Button>
+
+        <Label Grid.Row="0">
+            <Span FontWeight="Bold">System's current runtime</Span>
+        </Label>
+        <Grid Grid.Row="1" Margin="10">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="25" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label HorizontalAlignment="Right">Active Runtime :</Label>
+            <TextBox Grid.Row="0" Grid.Column="1" Name="RuntimeNameLabel" IsReadOnly="True" VerticalAlignment="Center">No Runtime found.</TextBox>
+
+            <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">Manifest :</Label>
+            <TextBox Grid.Row="1" Grid.Column="1" Name="ManifestPathLabel" IsReadOnly="true" VerticalAlignment="Center">N/A</TextBox>
+
+            <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right">Library :</Label>
+            <TextBox Grid.Row="2" Grid.Column="1" Name="LibraryPathLabel" IsReadOnly="True" VerticalAlignment="Center">N/A</TextBox>
+            <Label Grid.Row="3" Grid.Column="0">OpenXR Version :</Label>
+            <TextBox Grid.Row="3" Grid.Column="1" Name="VersionLabel" IsReadOnly="True" VerticalAlignment="Center">N/A</TextBox>
+        </Grid>
+        <Label Grid.Row="2">
+            <Span FontWeight="Bold">System's found Runtimes</Span>
+        </Label>
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right">Available runtimes :</Label>
+            <ComboBox Grid.Column="1" Name="RuntimeList"></ComboBox>
+            <Button Margin="0,5,0,0"  Grid.ColumnSpan="2" Grid.Row="1" Name="ChangeSystemRuntime" Click="ChangeSystemRuntime_OnClick">Set selected runtime as System</Button>
+
+        </Grid>
     </Grid>
 </Window>

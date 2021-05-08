@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Documents;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 
@@ -12,13 +10,31 @@ namespace OpenXR_Runtime_Manager
 {
 	class RuntimeManager
 	{
-		private readonly List<Runtime> _availableRuntimes = new List<Runtime>();
-		private Runtime _activeRuntime = null;
-		
-		public bool HasActiveRuntime { get; } = false;
-		public int RuntimeCount => _availableRuntimes.Count;
+		//TODO make a database of paths to manifest for known OpenXR runtimes that are compatible with MS Windows
+		string[] WellKnwonOpenXRRuntimeManifestPaths = new string[]
+		{
+			"%ProgramFiles(x86)%\\Steam\\steamapps\\common\\SteamVR\\steamxr_win64.json",
+			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_32.json",
+			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_64.json"
+		};
 
+		private readonly Dictionary<string, Runtime> _availableRuntimes = new Dictionary<string, Runtime>();
+		private Runtime _activeRuntime = null;
+
+		public bool HasActiveRuntime { get; } = false;
 		public Runtime ActiveRuntime => _activeRuntime;
+		public List<string> AvailableRuntimeNames
+		{
+			get
+			{
+				List<string> output = new List<string>();
+				foreach (var knownRuntime in _availableRuntimes)
+				{
+					output.Add(knownRuntime.Key);
+				}
+				return output;
+			}
+		}
 
 		private struct RuntimeInfo
 		{
@@ -38,29 +54,104 @@ namespace OpenXR_Runtime_Manager
 			[JsonProperty("runtime")] public RuntimeInfo runtime;
 		}
 
+		private Runtime ReadManifest(string runtimeManifestPath)
+		{
+			try
+			{
+				using (StreamReader r = new StreamReader(Environment.ExpandEnvironmentVariables(runtimeManifestPath)))
+				{
+					var json = r.ReadToEnd();
+					var manifest = JsonConvert.DeserializeObject<RuntimeManifest>(json);
+
+					return new Runtime(manifest.runtime.Name, runtimeManifestPath,
+						manifest.runtime.LibraryPath, new Version(1));
+				}
+			}
+			catch (Exception e)
+			{
+				Debug.Print(e.Message);
+				return null;
+			}
+		}
+
+		private void Handle32bit(Runtime runtime)
+		{
+			var manifestFilePath = runtime.ManifestFilePath;
+			if (manifestFilePath.Contains("oculus") && manifestFilePath.Contains("32"))
+				runtime.DecorateName(" (32 bits)");
+		}
+
 		private bool GetActiveRuntimeFromRegistry()
 		{
-			const string KhronosOpenXRPath = @"SOFTWARE\Khronos\OpenXR\1";
+			const int OpenXRVersion = 1;
+			string KhronosOpenXRPath = $@"SOFTWARE\Khronos\OpenXR\{OpenXRVersion}";
 			RegistryKey OpenXRV1Key = Registry.LocalMachine.OpenSubKey(KhronosOpenXRPath);
-			var activeRuntimeManifestPath = (string) OpenXRV1Key?.GetValue("ActiveRuntime");
+			var activeRuntimeManifestPath = (string)OpenXRV1Key?.GetValue("ActiveRuntime");
 
 			if (string.IsNullOrEmpty(activeRuntimeManifestPath)) return false;
-			using (StreamReader r = new StreamReader(activeRuntimeManifestPath))
+
+			_activeRuntime = ReadManifest(activeRuntimeManifestPath);
+			if (_activeRuntime != null)
 			{
-				var json = r.ReadToEnd();
-				var manifest = JsonConvert.DeserializeObject<RuntimeManifest>(json);
-
-				_activeRuntime = new Runtime(manifest.runtime.Name, activeRuntimeManifestPath,
-					manifest.runtime.LibraryPath, new Version(1));
-
-				_availableRuntimes.Add(_activeRuntime);
+				Handle32bit(_activeRuntime);
+				_availableRuntimes.Add(_activeRuntime.Name, _activeRuntime);
 				return true;
 			}
+
+			return false;
+		}
+
+		private void ProbeForAdditionalRuntimes()
+		{
+			foreach (string manifestFilePath in WellKnwonOpenXRRuntimeManifestPaths)
+			{
+				var probedRuntime = ReadManifest(manifestFilePath);
+				if (probedRuntime != null && Environment.ExpandEnvironmentVariables(probedRuntime.ManifestFilePath) !=
+					Environment.ExpandEnvironmentVariables(_activeRuntime.ManifestFilePath))
+				{
+					string name = probedRuntime.Name;
+					if (manifestFilePath.Contains("oculus") && manifestFilePath.Contains("32"))
+						name += " (32 bits)";
+
+					_availableRuntimes.Add(name, probedRuntime);
+				}
+			}
+		}
+
+		public bool SetRuntimeAsSystem(string name)
+		{
+			if (_availableRuntimes.TryGetValue(name, out var runtime))
+			{
+
+				//TODO refactor this
+				const int OpenXRVersion = 1;
+				string KhronosOpenXRPath = $@"SOFTWARE\Khronos\OpenXR\{OpenXRVersion}";
+				RegistryKey OpenXRV1Key = Registry.LocalMachine.OpenSubKey(KhronosOpenXRPath, true);
+
+				try
+				{
+					OpenXRV1Key.SetValue("ActiveRuntime", Environment.ExpandEnvironmentVariables(runtime.ManifestFilePath));
+					_activeRuntime = runtime;
+					return true;
+				}
+				catch (Exception e)
+				{
+					Debug.Print(e.Message);
+					return false;
+				}
+			}
+			return false;
 		}
 
 		public RuntimeManager()
 		{
 			HasActiveRuntime = GetActiveRuntimeFromRegistry();
+			ProbeForAdditionalRuntimes();
+
+			foreach (KeyValuePair<string, Runtime> availableRuntime in _availableRuntimes)
+			{
+				Debug.Print($"Found runtime {availableRuntime.Key}");
+			}
 		}
 	}
 }

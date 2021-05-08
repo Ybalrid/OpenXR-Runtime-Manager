@@ -14,6 +14,9 @@ namespace OpenXR_Runtime_Manager
 		private Version version;
 
 		public string Name => name;
+		public string ManifestFilePath => manifestPath;
+		public string LibraryDLLPath => libraryPath;
+		public Version Version => version;
 
 		public Runtime(string name, string manifestPath, string libraryPath, Version version)
 		{
@@ -21,6 +24,11 @@ namespace OpenXR_Runtime_Manager
 			this.manifestPath = manifestPath;
 			this.libraryPath = libraryPath;
 			this.version = version;
+		}
+
+		public void DecorateName(string appended)
+		{
+			name += appended;
 		}
 	}
 }

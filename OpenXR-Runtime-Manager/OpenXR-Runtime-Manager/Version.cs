@@ -12,6 +12,8 @@ namespace OpenXR_Runtime_Manager
 		public int minor;
 		public int patch;
 
+		public string ShortName => $"{major}.{minor}";
+
 		public override string ToString()
 		{
 			return $"{major}.{minor}.{patch}";

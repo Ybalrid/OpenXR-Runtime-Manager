@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,11 +26,32 @@ namespace OpenXR_Runtime_Manager
 			this.manifestPath = manifestPath;
 			this.libraryPath = libraryPath;
 			this.version = version;
+
+			if (Name == null)
+				HandleUnnamedRuntime();
 		}
 
 		public void DecorateName(string appended)
 		{
 			name += appended;
+		}
+
+		private void HandleUnnamedRuntime()
+		{
+			Debug.Print($"The runtime manifest did not contain the runtime name. We're extracting a string from the library_path ({libraryPath}) field instead so we can name this one.");
+			name = libraryPath;
+			name = name.Remove(name.Length - 4, 4);
+			if (name.StartsWith("bin"))
+				name = name.Remove(0, 4);
+
+			char[] toTrim =
+			{
+				'.',
+				'\\',
+				'/'
+			};
+
+			name = name.Trim(toTrim);
 		}
 	}
 }

@@ -15,6 +15,7 @@ This program relies on a list of "well known" manifest file paths and currently 
  - SteamVR
  - Oculus OpenXR
  - Oculus OpenXR (32bits)(*)
+ - MixedRearlityRuntime
 
 (* The `(32bits)` is added only for display purposes, as this runtime bear the same name as the 64bit version)
 

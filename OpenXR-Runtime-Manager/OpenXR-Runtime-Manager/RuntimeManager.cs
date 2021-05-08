@@ -15,7 +15,8 @@ namespace OpenXR_Runtime_Manager
 		{
 			"%ProgramFiles(x86)%\\Steam\\steamapps\\common\\SteamVR\\steamxr_win64.json",
 			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_32.json",
-			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_64.json"
+			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_64.json",
+			"%windir%\\system32\\MixedRealityRuntime.json"
 		};
 
 		private readonly Dictionary<string, Runtime> _availableRuntimes = new Dictionary<string, Runtime>();

@@ -22,7 +22,8 @@ namespace OpenXR_Runtime_Manager
 		private readonly Dictionary<string, Runtime> _availableRuntimes = new Dictionary<string, Runtime>();
 		private Runtime _activeRuntime = null;
 
-		public bool HasActiveRuntime { get; } = false;
+		public bool HasActiveRuntime => _activeRuntime != null;
+
 		public Runtime ActiveRuntime => _activeRuntime;
 		public List<string> AvailableRuntimeNames
 		{
@@ -107,8 +108,12 @@ namespace OpenXR_Runtime_Manager
 			foreach (string manifestFilePath in WellKnwonOpenXRRuntimeManifestPaths)
 			{
 				var probedRuntime = ReadManifest(manifestFilePath);
-				if (probedRuntime != null && Environment.ExpandEnvironmentVariables(probedRuntime.ManifestFilePath) !=
-					Environment.ExpandEnvironmentVariables(_activeRuntime.ManifestFilePath))
+				var activeRuntimeManifestPath = "";
+				if(_activeRuntime != null)
+					activeRuntimeManifestPath = _activeRuntime.ManifestFilePath;
+
+				if(probedRuntime != null && Environment.ExpandEnvironmentVariables(probedRuntime.ManifestFilePath) !=
+					Environment.ExpandEnvironmentVariables(activeRuntimeManifestPath))
 				{
 					string name = probedRuntime.Name;
 					if (manifestFilePath.Contains("oculus") && manifestFilePath.Contains("32"))
@@ -127,7 +132,7 @@ namespace OpenXR_Runtime_Manager
 				//TODO refactor this
 				const int OpenXRVersion = 1;
 				string KhronosOpenXRPath = $@"SOFTWARE\Khronos\OpenXR\{OpenXRVersion}";
-				RegistryKey OpenXRV1Key = Registry.LocalMachine.OpenSubKey(KhronosOpenXRPath, true);
+				RegistryKey OpenXRV1Key = Registry.LocalMachine.CreateSubKey(KhronosOpenXRPath, true);
 
 				try
 				{
@@ -146,7 +151,7 @@ namespace OpenXR_Runtime_Manager
 
 		public RuntimeManager()
 		{
-			HasActiveRuntime = GetActiveRuntimeFromRegistry();
+			GetActiveRuntimeFromRegistry();
 			ProbeForAdditionalRuntimes();
 
 			foreach (KeyValuePair<string, Runtime> availableRuntime in _availableRuntimes)

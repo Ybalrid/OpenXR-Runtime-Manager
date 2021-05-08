@@ -44,7 +44,7 @@
             <TextBox Grid.Row="3" Grid.Column="1" Name="VersionLabel" IsReadOnly="True" VerticalAlignment="Center">N/A</TextBox>
         </Grid>
         <Label Grid.Row="2">
-            <Span FontWeight="Bold">System's found Runtimes</Span>
+            <Span FontWeight="Bold">System's detected runtimes</Span>
         </Label>
         <Grid Grid.Row="3">
             <Grid.RowDefinitions>

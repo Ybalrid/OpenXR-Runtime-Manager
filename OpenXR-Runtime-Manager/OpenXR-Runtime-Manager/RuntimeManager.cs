@@ -10,7 +10,7 @@ namespace OpenXR_Runtime_Manager
 	class RuntimeManager
 	{
 		//TODO make a database of paths to manifest for known OpenXR runtimes that are compatible with MS Windows
-		string[] WellKnwonOpenXRRuntimeManifestPaths = new string[]
+		string[] WellKnwonOpenXRRuntimeManifestPaths =
 		{
 			"%ProgramFiles(x86)%\\Steam\\steamapps\\common\\SteamVR\\steamxr_win64.json",
 			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_32.json",
@@ -23,8 +23,8 @@ namespace OpenXR_Runtime_Manager
 		private Runtime _activeRuntime = null;
 
 		public bool HasActiveRuntime => _activeRuntime != null;
-
 		public Runtime ActiveRuntime => _activeRuntime;
+
 		public List<string> AvailableRuntimeNames
 		{
 			get
@@ -85,9 +85,7 @@ namespace OpenXR_Runtime_Manager
 
 		private bool GetActiveRuntimeFromRegistry()
 		{
-			const int OpenXRVersion = 1;
-			string KhronosOpenXRPath = $@"SOFTWARE\Khronos\OpenXR\{OpenXRVersion}";
-			RegistryKey OpenXRV1Key = Registry.LocalMachine.OpenSubKey(KhronosOpenXRPath);
+			RegistryKey OpenXRV1Key = Registry.LocalMachine.OpenSubKey(GetKhronosOpenXRVersionRegistryKeyPath());
 			var activeRuntimeManifestPath = (string)OpenXRV1Key?.GetValue("ActiveRuntime");
 
 			if (string.IsNullOrEmpty(activeRuntimeManifestPath)) return false;
@@ -128,11 +126,7 @@ namespace OpenXR_Runtime_Manager
 		{
 			if (_availableRuntimes.TryGetValue(name, out var runtime))
 			{
-
-				//TODO refactor this
-				const int OpenXRVersion = 1;
-				string KhronosOpenXRPath = $@"SOFTWARE\Khronos\OpenXR\{OpenXRVersion}";
-				RegistryKey OpenXRV1Key = Registry.LocalMachine.CreateSubKey(KhronosOpenXRPath, true);
+				RegistryKey OpenXRV1Key = Registry.LocalMachine.CreateSubKey(GetKhronosOpenXRVersionRegistryKeyPath(), true);
 
 				try
 				{
@@ -147,6 +141,11 @@ namespace OpenXR_Runtime_Manager
 				}
 			}
 			return false;
+		}
+
+		private static string GetKhronosOpenXRVersionRegistryKeyPath(int OpenXRVersion = 1)
+		{
+			return $@"SOFTWARE\Khronos\OpenXR\{OpenXRVersion}";
 		}
 
 		public RuntimeManager()

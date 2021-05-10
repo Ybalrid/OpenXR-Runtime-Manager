@@ -10,7 +10,7 @@ namespace OpenXR_Runtime_Manager
 	class RuntimeManager
 	{
 		//TODO make a database of paths to manifest for known OpenXR runtimes that are compatible with MS Windows
-		string[] WellKnwonOpenXRRuntimeManifestPaths =
+		readonly string[] WellKnwonOpenXRRuntimeManifestPaths =
 		{
 			"%ProgramFiles(x86)%\\Steam\\steamapps\\common\\SteamVR\\steamxr_win64.json",
 			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_32.json",
@@ -47,13 +47,13 @@ namespace OpenXR_Runtime_Manager
 			[JsonProperty("api_version")]
 			public string ApiVersion;
 			[JsonProperty("VALVE_runtime_is_steamvr")]
-			public bool VALVE_runtime_is_steamvr;
+			public bool ValveRuntimeIsSteamvr;
 		}
 
 		private struct RuntimeManifest
 		{
-			[JsonProperty("file_format_version")] public string versionTag;
-			[JsonProperty("runtime")] public RuntimeInfo runtime;
+			[JsonProperty("file_format_version")] public string VersionTag;
+			[JsonProperty("runtime")] public RuntimeInfo Runtime;
 		}
 
 		private Runtime ReadManifest(string runtimeManifestPath)
@@ -65,8 +65,8 @@ namespace OpenXR_Runtime_Manager
 					var json = r.ReadToEnd();
 					var manifest = JsonConvert.DeserializeObject<RuntimeManifest>(json);
 
-					return new Runtime(manifest.runtime.Name, runtimeManifestPath,
-						manifest.runtime.LibraryPath, new Version(1));
+					return new Runtime(manifest.Runtime.Name, runtimeManifestPath,
+						manifest.Runtime.LibraryPath, new Version(1));
 				}
 			}
 			catch (Exception e)

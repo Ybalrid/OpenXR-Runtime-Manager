@@ -99,6 +99,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="openvr_api.cs" />
     <Compile Include="Runtime.cs" />
     <Compile Include="RuntimeManager.cs" />
     <Compile Include="Version.cs" />
@@ -158,5 +159,16 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="openvr_api.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(ProjectDir)openvr_api.dll $(TargetDir)</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>copy $(ProjectDir)..\..\third-party\openvr\bin\win64\openvr_api.dll ${ProjectDir)
+copy $(ProjectDir)..\..\third-party\openvr\headers\openvr_api.cs ${ProjectDir)
+</PreBuildEvent>
+  </PropertyGroup>
 </Project>

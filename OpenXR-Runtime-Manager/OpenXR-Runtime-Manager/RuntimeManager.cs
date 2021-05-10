@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using Valve.VR;
 
 namespace OpenXR_Runtime_Manager
 {
 	class RuntimeManager
 	{
 		//TODO make a database of paths to manifest for known OpenXR runtimes that are compatible with MS Windows
-		readonly string[] WellKnwonOpenXRRuntimeManifestPaths =
+		List<string> WellKnwonOpenXRRuntimeManifestPaths = new List<string>()
 		{
-			"%ProgramFiles(x86)%\\Steam\\steamapps\\common\\SteamVR\\steamxr_win64.json",
 			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_32.json",
 			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_64.json",
 			"%windir%\\system32\\MixedRealityRuntime.json",
@@ -148,9 +150,44 @@ namespace OpenXR_Runtime_Manager
 			return $@"SOFTWARE\Khronos\OpenXR\{OpenXRVersion}";
 		}
 
+		/// <summary>
+		/// Uses OpenVR to query the installation path of SteamVR, to then build the path to the OpenXR manifest file
+		/// </summary>
+		/// <returns>True upon success. </returns>
+		private bool ProbeForSteamVRInstallationPath()
+		{
+			StringBuilder pathBuilder = new StringBuilder(256);
+			uint bufferSize = (uint)pathBuilder.Length;
+			try
+			{
+				if (OpenVRInterop.GetRuntimePath(pathBuilder, bufferSize, ref bufferSize))
+				{
+					string pathToSteamVR = pathBuilder.ToString();
+					Debug.Print($"Found a SteamVR installation at {pathToSteamVR}");
+					string pathToSteamVRManifest = Path.Combine(pathBuilder.ToString(), "steamxr_win64.json");
+					WellKnwonOpenXRRuntimeManifestPaths.Add(pathToSteamVRManifest);
+					return true;
+				}
+				return false;
+			}
+			catch(DllNotFoundException e)
+			{
+				Debug.Print("Missing openvr_api.dll?!");
+				Debug.Print(e.Message);
+				return false;
+			}
+		}
+
 		public RuntimeManager()
 		{
 			GetActiveRuntimeFromRegistry();
+
+			if(!ProbeForSteamVRInstallationPath())
+			{
+				Debug.Print("This system seems to not have SteamVR installed, or we cannot call OpenVR for some other reasons. Will probe in default installation folder instead");
+				WellKnwonOpenXRRuntimeManifestPaths.Add("%ProgramFiles(x86)%\\Steam\\steamapps\\common\\SteamVR\\steamxr_win64.json");
+			}
+
 			ProbeForAdditionalRuntimes();
 
 			foreach (KeyValuePair<string, Runtime> availableRuntime in _availableRuntimes)

@@ -164,11 +164,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(ProjectDir)openvr_api.dll $(TargetDir)</PostBuildEvent>
+    <PostBuildEvent>copy $(ProjectDir)openvr_api.dll $(TargetDir)openvr_api.dll</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>copy $(ProjectDir)..\..\third-party\openvr\bin\win64\openvr_api.dll ${ProjectDir)
-copy $(ProjectDir)..\..\third-party\openvr\headers\openvr_api.cs ${ProjectDir)
+    <PreBuildEvent>copy $(ProjectDir)..\..\third-party\openvr\bin\win64\openvr_api.dll $(ProjectDir)\openvr_api.dll
+copy $(ProjectDir)..\..\third-party\openvr\headers\openvr_api.cs $(ProjectDir)\openvr_api.cs
 </PreBuildEvent>
   </PropertyGroup>
 </Project>

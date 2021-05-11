@@ -27,12 +27,13 @@ namespace OpenXR_Runtime_Manager
 		{
 			InitializeComponent();
 			UpdateActiveRuntimeDisplay();
-			UpdateAvailalbeRuntimeList();
+			UpdateAvailableRuntimeList();
 		}
 
-		private void UpdateAvailalbeRuntimeList()
+		private void UpdateAvailableRuntimeList()
 		{
 			var availableRuntimeList = runtimeManager.AvailableRuntimeNames;
+			RuntimeList.Items.Clear();
 			foreach (string name in availableRuntimeList)
 			{
 				RuntimeList.Items.Add(name);

@@ -157,7 +157,7 @@ namespace OpenXR_Runtime_Manager
 		private bool ProbeForSteamVRInstallationPath()
 		{
 			StringBuilder pathBuilder = new StringBuilder(256);
-			uint bufferSize = (uint)pathBuilder.Length;
+			uint bufferSize = 256;
 			try
 			{
 				if (OpenVRInterop.GetRuntimePath(pathBuilder, bufferSize, ref bufferSize))

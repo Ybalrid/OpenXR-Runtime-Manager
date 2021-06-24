@@ -18,7 +18,8 @@ namespace OpenXR_Runtime_Manager
 			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_32.json",
 			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_64.json",
 			"%windir%\\system32\\MixedRealityRuntime.json",
-			"%ProgramFiles%\\Varjo\\varjo-openxr\\VarjoOpenXR.json"
+			"%ProgramFiles%\\Varjo\\varjo-openxr\\VarjoOpenXR.json",
+			"%ProgramFiles(x86)%\\VIVE\\Updater\\App\\ViveVRRuntime\\ViveVR_openxr\\ViveOpenXR.json"
 		};
 
 		private readonly Dictionary<string, Runtime> _availableRuntimes = new Dictionary<string, Runtime>();
@@ -109,10 +110,10 @@ namespace OpenXR_Runtime_Manager
 			{
 				var probedRuntime = ReadManifest(manifestFilePath);
 				var activeRuntimeManifestPath = "";
-				if(_activeRuntime != null)
+				if (_activeRuntime != null)
 					activeRuntimeManifestPath = _activeRuntime.ManifestFilePath;
 
-				if(probedRuntime != null && Environment.ExpandEnvironmentVariables(probedRuntime.ManifestFilePath) !=
+				if (probedRuntime != null && Environment.ExpandEnvironmentVariables(probedRuntime.ManifestFilePath) !=
 					Environment.ExpandEnvironmentVariables(activeRuntimeManifestPath))
 				{
 					string name = probedRuntime.Name;
@@ -170,7 +171,7 @@ namespace OpenXR_Runtime_Manager
 				}
 				return false;
 			}
-			catch(DllNotFoundException e)
+			catch (DllNotFoundException e)
 			{
 				Debug.Print("Missing openvr_api.dll?!");
 				Debug.Print(e.Message);
@@ -182,7 +183,7 @@ namespace OpenXR_Runtime_Manager
 		{
 			GetActiveRuntimeFromRegistry();
 
-			if(!ProbeForSteamVRInstallationPath())
+			if (!ProbeForSteamVRInstallationPath())
 			{
 				Debug.Print("This system seems to not have SteamVR installed, or we cannot call OpenVR for some other reasons. Will probe in default installation folder instead");
 				WellKnwonOpenXRRuntimeManifestPaths.Add("%ProgramFiles(x86)%\\Steam\\steamapps\\common\\SteamVR\\steamxr_win64.json");

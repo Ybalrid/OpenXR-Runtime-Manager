@@ -31,7 +31,7 @@ namespace OpenXR_Runtime_Manager
 			name += appended;
 		}
 
-		private static string[] skippedWordList = new []
+		private static string[] skippedWordList = new[]
 		{
 			"OpenXR",
 			"SteamVR"
@@ -65,7 +65,7 @@ namespace OpenXR_Runtime_Manager
 
 				if (!Char.IsUpper(str[i]) && Char.IsUpper(str[i + 1]))
 				{
-					str = str.Insert(i+1, " ");
+					str = str.Insert(i + 1, " ");
 				}
 			}
 

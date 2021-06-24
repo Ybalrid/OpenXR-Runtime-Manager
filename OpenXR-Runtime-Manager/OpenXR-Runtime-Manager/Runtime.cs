@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace OpenXR_Runtime_Manager
 {
@@ -30,6 +31,47 @@ namespace OpenXR_Runtime_Manager
 			name += appended;
 		}
 
+		private static string[] skippedWordList = new []
+		{
+			"OpenXR",
+			"SteamVR"
+		};
+
+		/// <summary>Advance the index so we skip words in `skippedWordList`</summary>
+		/// <returns>Numbers of characters to skip</returns>
+		/// <param name="restOfTheString">A substrings starting at the current index</param>
+		private int SkipIgnoredWord(string restOfTheString)
+		{
+			foreach (string word in skippedWordList)
+			{
+				if (restOfTheString.StartsWith(word))
+					return word.Length;
+			}
+
+			return 0;
+		}
+
+		private string UncammelCase(string str)
+		{
+			for (int i = SkipIgnoredWord(str);
+				i < str.Length - 1;
+				++i)
+			{
+				if (Char.IsWhiteSpace(str[i]))
+				{
+					i += SkipIgnoredWord(str.Substring(i + 1));
+					continue;
+				}
+
+				if (!Char.IsUpper(str[i]) && Char.IsUpper(str[i + 1]))
+				{
+					str = str.Insert(i+1, " ");
+				}
+			}
+
+			return str;
+		}
+
 		private void HandleUnnamedRuntime()
 		{
 			Debug.Print($"The runtime manifest did not contain the runtime name. We're extracting a string from the library_path ({libraryPath}) field instead so we can name this one.");
@@ -46,6 +88,8 @@ namespace OpenXR_Runtime_Manager
 			};
 
 			name = name.Trim(toTrim);
+
+			name = UncammelCase(name);
 		}
 	}
 }

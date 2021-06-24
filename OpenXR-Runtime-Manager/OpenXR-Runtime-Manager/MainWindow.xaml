@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenXR_Runtime_Manager"
         mc:Ignorable="d"
-        Title="OpenXR Runtime Manager" Height="300" Width="700" ResizeMode="NoResize">
+        Title="OpenXR Runtime Manager" Height="300" Width="700" ResizeMode="CanMinimize">
     <Grid Margin="10">
 
         <Grid.RowDefinitions>

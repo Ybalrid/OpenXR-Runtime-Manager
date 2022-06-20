@@ -15,7 +15,7 @@ namespace OpenXR_Runtime_Manager
 		//TODO make a database of paths to manifest for known OpenXR runtimes that are compatible with MS Windows
 		List<string> WellKnwonOpenXRRuntimeManifestPaths = new List<string>()
 		{
-			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_64.json",
+			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_64.json", //TODO Oculus actually added themselves to the regkey AvailableRuntimes. Probably can delete that line later.
 			"%windir%\\system32\\MixedRealityRuntime.json",
 			"%ProgramFiles%\\Varjo\\varjo-openxr\\VarjoOpenXR.json",
 			"%ProgramFiles(x86)%\\VIVE\\Updater\\App\\ViveVRRuntime\\ViveVR_openxr\\ViveOpenXR.json"
@@ -78,6 +78,33 @@ namespace OpenXR_Runtime_Manager
 			}
 		}
 
+        private bool GetAvaialbleRuntimesFromRegistry()
+        {
+            bool hasAppended = false;
+			RegistryKey OpenXRV1Key = Registry.LocalMachine.OpenSubKey(GetKhronosOpenXRVersionRegistryKeyPath());
+            RegistryKey AvailableRuntimesKey = OpenXRV1Key?.OpenSubKey("AvailableRuntimes");
+
+            if(AvailableRuntimesKey != null)
+            {
+                var AvailableRuntimes = AvailableRuntimesKey.GetValueNames();
+
+				foreach(string RuntimeManifestPath in AvailableRuntimes)
+                {
+                    if (AvailableRuntimesKey.GetValue(RuntimeManifestPath).Equals(0))
+                    {
+                        var AvailableRuntimeManifest = ReadManifest(RuntimeManifestPath);
+                        if (AvailableRuntimes != null)
+                        {
+                            _availableRuntimes[AvailableRuntimeManifest.Name] = AvailableRuntimeManifest;
+                            hasAppended = true;
+                        }
+                    }
+                }
+            }
+
+            return hasAppended;
+        }
+
 		private bool GetActiveRuntimeFromRegistry()
 		{
 			RegistryKey OpenXRV1Key = Registry.LocalMachine.OpenSubKey(GetKhronosOpenXRVersionRegistryKeyPath());
@@ -86,14 +113,15 @@ namespace OpenXR_Runtime_Manager
 			if (string.IsNullOrEmpty(activeRuntimeManifestPath)) return false;
 
 			_activeRuntime = ReadManifest(activeRuntimeManifestPath);
-			if (_activeRuntime != null)
-			{
-				_availableRuntimes.Add(_activeRuntime.Name, _activeRuntime);
+            if (_activeRuntime != null)
+            {
+                _availableRuntimes[_activeRuntime.Name] = _activeRuntime;
 				return true;
 			}
 
 			return false;
 		}
+
 
 		private void ProbeForAdditionalRuntimes()
 		{
@@ -104,14 +132,16 @@ namespace OpenXR_Runtime_Manager
 				if (_activeRuntime != null)
 					activeRuntimeManifestPath = _activeRuntime.ManifestFilePath;
 
-				if (probedRuntime != null && Environment.ExpandEnvironmentVariables(probedRuntime.ManifestFilePath) !=
-					Environment.ExpandEnvironmentVariables(activeRuntimeManifestPath))
-				{
-					string name = probedRuntime.Name;
-					_availableRuntimes.Add(name, probedRuntime);
+                if (probedRuntime != null && Environment.ExpandEnvironmentVariables(probedRuntime.ManifestFilePath) !=
+                    Environment.ExpandEnvironmentVariables(activeRuntimeManifestPath))
+                {
+                    string name = probedRuntime.Name;
+                    _availableRuntimes[name] = probedRuntime;
 				}
 			}
 		}
+
+
 
 		public bool SetRuntimeAsSystem(string name)
 		{
@@ -170,8 +200,9 @@ namespace OpenXR_Runtime_Manager
 		public RuntimeManager()
 		{
 			GetActiveRuntimeFromRegistry();
-
-			if (!ProbeForSteamVRInstallationPath())
+            GetAvaialbleRuntimesFromRegistry();
+            
+            if (!ProbeForSteamVRInstallationPath())
 			{
 				Debug.Print("This system seems to not have SteamVR installed, or we cannot call OpenVR for some other reasons. Will probe in default installation folder instead");
 				WellKnwonOpenXRRuntimeManifestPaths.Add("%ProgramFiles(x86)%\\Steam\\steamapps\\common\\SteamVR\\steamxr_win64.json");

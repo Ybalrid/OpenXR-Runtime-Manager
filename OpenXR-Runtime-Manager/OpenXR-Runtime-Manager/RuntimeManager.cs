@@ -15,7 +15,6 @@ namespace OpenXR_Runtime_Manager
 		//TODO make a database of paths to manifest for known OpenXR runtimes that are compatible with MS Windows
 		List<string> WellKnwonOpenXRRuntimeManifestPaths = new List<string>()
 		{
-			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_32.json",
 			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_64.json",
 			"%windir%\\system32\\MixedRealityRuntime.json",
 			"%ProgramFiles%\\Varjo\\varjo-openxr\\VarjoOpenXR.json",
@@ -79,13 +78,6 @@ namespace OpenXR_Runtime_Manager
 			}
 		}
 
-		private void Handle32bit(Runtime runtime)
-		{
-			var manifestFilePath = runtime.ManifestFilePath;
-			if (manifestFilePath.Contains("oculus") && manifestFilePath.Contains("32"))
-				runtime.DecorateName(" (32 bits)");
-		}
-
 		private bool GetActiveRuntimeFromRegistry()
 		{
 			RegistryKey OpenXRV1Key = Registry.LocalMachine.OpenSubKey(GetKhronosOpenXRVersionRegistryKeyPath());
@@ -96,7 +88,6 @@ namespace OpenXR_Runtime_Manager
 			_activeRuntime = ReadManifest(activeRuntimeManifestPath);
 			if (_activeRuntime != null)
 			{
-				Handle32bit(_activeRuntime);
 				_availableRuntimes.Add(_activeRuntime.Name, _activeRuntime);
 				return true;
 			}
@@ -117,9 +108,6 @@ namespace OpenXR_Runtime_Manager
 					Environment.ExpandEnvironmentVariables(activeRuntimeManifestPath))
 				{
 					string name = probedRuntime.Name;
-					if (manifestFilePath.Contains("oculus") && manifestFilePath.Contains("32"))
-						name += " (32 bits)";
-
 					_availableRuntimes.Add(name, probedRuntime);
 				}
 			}

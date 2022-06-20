@@ -14,16 +14,15 @@ This program relies on a list of "well known" manifest file paths and currently 
 
  - SteamVR
  - Oculus OpenXR
- - Oculus OpenXR (32bits)(*)
  - MixedRearlityRuntime
  - VarjoOpenXR
 
-(* The `(32bits)` is added only for display purposes, as this runtime bear the same name as the 64bit version)
-
 It would be really easy to add more supported runtimes, but I need to know the path where their install their json manifests.
+
+*Note: This program currently do not handle configuring 32bit runtimes in a 64bit build.*
 
 ## Legal
 
-Copyright :copyright: 2021 Arthur Brainville (Ybalrid) - Licensed under the terms of the MIT License agreement.
+Copyright :copyright: 2021-2022 Arthur Brainville (Ybalrid) - Licensed under the terms of the MIT License agreement.
 
 *OpenXR™ is a trademark owned by The Khronos Group Inc. and is registered as a trademark in China, the European Union, Japan and the United Kingdom.*

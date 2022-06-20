@@ -23,6 +23,6 @@ It would be really easy to add more supported runtimes, but I need to know the p
 
 ## Legal
 
-Copyright :copyright: 2021 Arthur Brainville (Ybalrid) - Licensed under the terms of the MIT License agreement.
+Copyright :copyright: 2021-2022 Arthur Brainville (Ybalrid) - Licensed under the terms of the MIT License agreement.
 
 *OpenXR™ is a trademark owned by The Khronos Group Inc. and is registered as a trademark in China, the European Union, Japan and the United Kingdom.*

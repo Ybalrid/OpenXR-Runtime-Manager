@@ -15,7 +15,6 @@ namespace OpenXR_Runtime_Manager
 		//TODO make a database of paths to manifest for known OpenXR runtimes that are compatible with MS Windows
 		List<string> WellKnwonOpenXRRuntimeManifestPaths = new List<string>()
 		{
-			"%ProgramFiles%\\Oculus\\Support\\oculus-runtime\\oculus_openxr_64.json", //TODO Oculus actually added themselves to the regkey AvailableRuntimes. Probably can delete that line later.
 			"%windir%\\system32\\MixedRealityRuntime.json",
 			"%ProgramFiles%\\Varjo\\varjo-openxr\\VarjoOpenXR.json",
 			"%ProgramFiles(x86)%\\VIVE\\Updater\\App\\ViveVRRuntime\\ViveVR_openxr\\ViveOpenXR.json"

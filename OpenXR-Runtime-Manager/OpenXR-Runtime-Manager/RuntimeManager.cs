@@ -80,21 +80,21 @@ namespace OpenXR_Runtime_Manager
         private bool GetAvaialbleRuntimesFromRegistry()
         {
             bool hasAppended = false;
-			RegistryKey OpenXRV1Key = Registry.LocalMachine.OpenSubKey(GetKhronosOpenXRVersionRegistryKeyPath());
-            RegistryKey AvailableRuntimesKey = OpenXRV1Key?.OpenSubKey("AvailableRuntimes");
+			RegistryKey openXRv1Key = Registry.LocalMachine.OpenSubKey(GetKhronosOpenXRVersionRegistryKeyPath());
+            RegistryKey availableRuntimesKey = openXRv1Key?.OpenSubKey("AvailableRuntimes");
 
-            if(AvailableRuntimesKey != null)
+            if(availableRuntimesKey != null)
             {
-                var AvailableRuntimes = AvailableRuntimesKey.GetValueNames();
+                var availableRuntimes = availableRuntimesKey.GetValueNames();
 
-				foreach(string RuntimeManifestPath in AvailableRuntimes)
+				foreach(string runtimeManifestPath in availableRuntimes)
                 {
-                    if (AvailableRuntimesKey.GetValue(RuntimeManifestPath).Equals(0))
+                    if (availableRuntimesKey.GetValue(runtimeManifestPath).Equals(0))
                     {
-                        var AvailableRuntimeManifest = ReadManifest(RuntimeManifestPath);
-                        if (AvailableRuntimes != null)
+                        var availableRuntimeManifest = ReadManifest(runtimeManifestPath);
+                        if (availableRuntimes != null)
                         {
-                            _availableRuntimes[AvailableRuntimeManifest.Name] = AvailableRuntimeManifest;
+                            _availableRuntimes[availableRuntimeManifest.Name] = availableRuntimeManifest;
                             hasAppended = true;
                         }
                     }
@@ -139,9 +139,6 @@ namespace OpenXR_Runtime_Manager
 				}
 			}
 		}
-
-
-
 		public bool SetRuntimeAsSystem(string name)
 		{
 			if (_availableRuntimes.TryGetValue(name, out var runtime))
@@ -198,8 +195,10 @@ namespace OpenXR_Runtime_Manager
 
 		public RuntimeManager()
 		{
-			GetActiveRuntimeFromRegistry();
-            GetAvaialbleRuntimesFromRegistry();
+			if(!GetActiveRuntimeFromRegistry())
+				Debug.WriteLine("Failed to get current runtime");
+            if(!GetAvaialbleRuntimesFromRegistry())
+				Debug.Write("Failed to get available runtimes from registry");
             
             if (!ProbeForSteamVRInstallationPath())
 			{

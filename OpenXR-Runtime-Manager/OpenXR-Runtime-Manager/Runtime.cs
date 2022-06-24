@@ -74,6 +74,7 @@ namespace OpenXR_Runtime_Manager
 
 		private void HandleUnnamedRuntime()
 		{
+      
 			Debug.Print($"The runtime manifest did not contain the runtime name. We're extracting a string from the library_path ({libraryPath}) field instead so we can name this one.");
 			name = libraryPath;
 			name = name.Remove(name.Length - 4, 4);
@@ -88,8 +89,13 @@ namespace OpenXR_Runtime_Manager
 			};
 
 			name = name.Trim(toTrim);
-
 			name = UncammelCase(name);
+
+            if (libraryPath.Contains("MixedRealityRuntime") && manifestPath.Contains("WINDOWS\\system32"))
+            {
+                name = "Windows " + name;
+            }
+
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -63,5 +64,41 @@ namespace OpenXR_Runtime_Manager
 				UpdateActiveRuntimeDisplay();
 			}
 		}
-	}
+
+        private void SeeRuntimeDetails_OnClick(object sender, RoutedEventArgs e)
+        {
+            var runtime = runtimeManager.GetRuntimeInfo(RuntimeList.SelectionBoxItem.ToString());
+            ProcessStartInfo startInfo = new ProcessStartInfo("OpenXR-Info.exe");
+            startInfo.EnvironmentVariables.Add("XR_RUNTIME_JSON", runtime.ManifestFilePath);
+            startInfo.UseShellExecute = false;
+            Process OpenXRInfo =  Process.Start(startInfo);
+
+			OpenXRInfo.WaitForExit();
+
+            try
+            {
+                var report = File.ReadAllText("report.json");
+
+                var runtimeReport = InfoToolReport.GetInfo(report);
+
+                if (runtimeReport.extension_list != null)
+                    foreach (var extensionInfo in runtimeReport.extension_list)
+                    {
+
+                    }
+
+                if (runtimeReport.layer_list != null)
+                    foreach (var layerInfo in runtimeReport.layer_list)
+                    {
+
+                    }
+
+            }
+            catch (Exception exept)
+            {
+                Debug.Print(exept.ToString());
+                //TODO DEBUG
+            }
+        }
+    }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenXR_Runtime_Manager"
         mc:Ignorable="d"
-        Title="OpenXR Runtime Manager" Height="300" Width="700" ResizeMode="CanMinimize">
+        Title="OpenXR Runtime Manager" Height="330" Width="700" ResizeMode="CanMinimize">
     <Grid Margin="10">
 
         <Grid.RowDefinitions>
@@ -50,6 +50,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -60,6 +61,7 @@
             <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right">Available runtimes :</Label>
             <ComboBox Grid.Column="1" Name="RuntimeList"></ComboBox>
             <Button Margin="0,5,0,0"  Grid.ColumnSpan="2" Grid.Row="1" Name="ChangeSystemRuntime" Click="ChangeSystemRuntime_OnClick">Set selected runtime as System's Active Runtime</Button>
+            <Button Margin="0,5,0,0"  Grid.ColumnSpan="2" Grid.Row="2" Name="RuntimeDetails" Click="SeeRuntimeDetails_OnClick">See extensions and layers</Button>
 
         </Grid>
     </Grid>

@@ -213,5 +213,13 @@ namespace OpenXR_Runtime_Manager
 				Debug.Print($"Found runtime {availableRuntime.Key}");
 			}
 		}
+
+        public Runtime GetRuntimeInfo(string name)
+        {
+            if (_availableRuntimes.TryGetValue(name, out Runtime value))
+                return value;
+
+            throw new InvalidOperationException("That runtime does not exist");
+        }
 	}
 }

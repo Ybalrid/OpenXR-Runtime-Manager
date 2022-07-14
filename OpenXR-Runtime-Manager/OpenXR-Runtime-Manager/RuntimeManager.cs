@@ -79,6 +79,7 @@ namespace OpenXR_Runtime_Manager
 
         private bool GetAvaialbleRuntimesFromRegistry()
         {
+			Debug.Print("Looking for AvailableRuntimes in the registry");
             bool hasAppended = false;
 			RegistryKey openXRv1Key = Registry.LocalMachine.OpenSubKey(GetKhronosOpenXRVersionRegistryKeyPath());
             RegistryKey availableRuntimesKey = openXRv1Key?.OpenSubKey("AvailableRuntimes");
@@ -86,12 +87,13 @@ namespace OpenXR_Runtime_Manager
             if(availableRuntimesKey != null)
             {
                 var availableRuntimes = availableRuntimesKey.GetValueNames();
-
-				foreach(string runtimeManifestPath in availableRuntimes)
+                foreach(string runtimeManifestPath in availableRuntimes)
                 {
+					Debug.Print($"Manifest path in registry : {runtimeManifestPath}");
                     if (availableRuntimesKey.GetValue(runtimeManifestPath).Equals(0))
                     {
                         var availableRuntimeManifest = ReadManifest(runtimeManifestPath);
+                        Debug.Print($"Read manifest for {availableRuntimeManifest.Name}");
                         if (availableRuntimes != null)
                         {
                             _availableRuntimes[availableRuntimeManifest.Name] = availableRuntimeManifest;
@@ -198,7 +200,7 @@ namespace OpenXR_Runtime_Manager
 			if(!GetActiveRuntimeFromRegistry())
 				Debug.WriteLine("Failed to get current runtime");
             if(!GetAvaialbleRuntimesFromRegistry())
-				Debug.Write("Failed to get available runtimes from registry");
+				Debug.WriteLine("Failed to get available runtimes from registry");
             
             if (!ProbeForSteamVRInstallationPath())
 			{

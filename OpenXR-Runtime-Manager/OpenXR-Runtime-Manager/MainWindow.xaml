@@ -1,69 +1,96 @@
-﻿<Window x:Class="OpenXR_Runtime_Manager.MainWindow"
+<Window x:Class="OpenXR_Runtime_Manager.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenXR_Runtime_Manager"
         mc:Ignorable="d"
-        Title="OpenXR Runtime Manager" Height="300" Width="700" ResizeMode="CanMinimize"
-		Background="{DynamicResource AppBg}"
-		Foreground="{DynamicResource AppFg}"
-		>
-	<Grid Margin="10">
+        Title="OpenXR Runtime Manager"
+        ThemeMode="System"
+        SizeToContent="Height"
+        Width="760"
+        MinHeight="220"
+        MinWidth="760"
+        ResizeMode="CanMinimize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-		<Grid.RowDefinitions>
-			<RowDefinition Height="30"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="30"/>
-			<RowDefinition Height="Auto"/>
-		</Grid.RowDefinitions>
+        <GroupBox Header="System's current runtime" Padding="14">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-		<Label Grid.Row="0">
-			<Span FontWeight="Bold">System's current runtime</Span>
-		</Label>
-		<Grid Grid.Row="1" Margin="10">
+                <TextBlock Grid.Row="0" Grid.Column="0" Margin="0,0,10,10" Text="Active runtime:" />
+                <TextBox Grid.Row="0"
+                         Grid.Column="1"
+                         Name="RuntimeNameLabel"
+                         Margin="0,0,0,10"
+                         IsReadOnly="True"
+                         IsReadOnlyCaretVisible="True">No Runtime found!</TextBox>
 
-			<Grid.RowDefinitions>
-				<RowDefinition Height="25" />
-				<RowDefinition Height="25" />
-				<RowDefinition Height="25" />
-				<RowDefinition Height="25" />
-			</Grid.RowDefinitions>
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,0,10,10" Text="Manifest:" />
+                <TextBox Grid.Row="1"
+                         Grid.Column="1"
+                         Name="ManifestPathLabel"
+                         Margin="0,0,0,10"
+                         IsReadOnly="True"
+                         IsReadOnlyCaretVisible="True">N/A</TextBox>
 
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="*"/>
-			</Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="0,0,10,10" Text="Library:" />
+                <TextBox Grid.Row="2"
+                         Grid.Column="1"
+                         Name="LibraryPathLabel"
+                         Margin="0,0,0,10"
+                         IsReadOnly="True"
+                         IsReadOnlyCaretVisible="True">N/A</TextBox>
 
-			<Label HorizontalAlignment="Right">Active Runtime :</Label>
-			<TextBox Grid.Row="0" Grid.Column="1" Name="RuntimeNameLabel" IsReadOnly="True" VerticalAlignment="Center">No Runtime found!</TextBox>
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,0,10,0" Text="OpenXR version:" />
+                <TextBox Grid.Row="3"
+                         Grid.Column="1"
+                         Name="VersionLabel"
+                         IsReadOnly="True"
+                         IsReadOnlyCaretVisible="True">N/A</TextBox>
+            </Grid>
+        </GroupBox>
 
-			<Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">Manifest :</Label>
-			<TextBox Grid.Row="1" Grid.Column="1" Name="ManifestPathLabel" IsReadOnly="true" VerticalAlignment="Center">N/A</TextBox>
+        <GroupBox Grid.Row="2" Header="System's detected runtimes" Padding="14">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="14" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-			<Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right">Library :</Label>
-			<TextBox Grid.Row="2" Grid.Column="1" Name="LibraryPathLabel" IsReadOnly="True" VerticalAlignment="Center">N/A</TextBox>
-			<Label Grid.Row="3" Grid.Column="0">OpenXR Version :</Label>
-			<TextBox Grid.Row="3" Grid.Column="1" Name="VersionLabel" IsReadOnly="True" VerticalAlignment="Center">N/A</TextBox>
-		</Grid>
-		<Label Grid.Row="2">
-			<Span FontWeight="Bold">System's detected runtimes</Span>
-		</Label>
-		<Grid Grid.Row="3">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="25"/>
-				<RowDefinition Height="30"/>
-			</Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Margin="0,0,10,0" Text="Available runtimes:" />
+                <ComboBox Grid.Row="0"
+                          Grid.Column="1"
+                          Name="RuntimeList"
+                          MinHeight="34"
+                          VerticalContentAlignment="Center" />
 
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="*"/>
-			</Grid.ColumnDefinitions>
-
-			<Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right">Available runtimes :</Label>
-			<ComboBox Grid.Column="1" Name="RuntimeList"></ComboBox>
-			<Button Margin="0,5,0,0"  Grid.ColumnSpan="2" Grid.Row="1" Name="ChangeSystemRuntime" Click="ChangeSystemRuntime_OnClick">Set selected runtime as System's Active Runtime</Button>
-
-		</Grid>
-	</Grid>
+                <Button Grid.Row="2"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Name="ChangeSystemRuntime"
+                        MinHeight="42"
+                        Click="ChangeSystemRuntime_OnClick">Set selected runtime as system's active runtime</Button>
+            </Grid>
+        </GroupBox>
+    </Grid>
 </Window>

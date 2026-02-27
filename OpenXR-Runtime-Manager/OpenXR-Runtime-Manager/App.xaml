@@ -1,191 +1,22 @@
-﻿<Application x:Class="OpenXR_Runtime_Manager.App"
+<Application x:Class="OpenXR_Runtime_Manager.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="MainWindow.xaml">
-	<Application.Resources>
-		<!-- App-level palette -->
-		<SolidColorBrush x:Key="AppBg" Color="#FF202020"/>
-		<SolidColorBrush x:Key="AppPanelBg" Color="#FF2A2A2A"/>
-		<SolidColorBrush x:Key="AppFg" Color="#FFF0F0F0"/>
-		<SolidColorBrush x:Key="AppBorder" Color="#FF4A4A4A"/>
-		<SolidColorBrush x:Key="AppAccent" Color="#FF5AA0FF"/>
-		<SolidColorBrush x:Key="AppSelectionBg" Color="#FF3A6FB0"/>
+             StartupUri="MainWindow.xaml"
+             ThemeMode="System">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-		<!-- These keys are used by many default WPF control templates -->
-		<SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#FF202020"/>
-		<SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="#FFF0F0F0"/>
+            <Style TargetType="{x:Type Window}">
+                <Setter Property="FontFamily" Value="Segoe UI Variable Text" />
+                <Setter Property="FontSize" Value="13" />
+            </Style>
 
-		<SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#FF2A2A2A"/>
-		<SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="#FFF0F0F0"/>
-
-		<SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#FF5AA0FF"/>
-		<SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#FF000000"/>
-
-
-		<!-- Labels / TextBlocks -->
-		<Style TargetType="{x:Type TextBlock}">
-			<Setter Property="Foreground" Value="{DynamicResource AppFg}"/>
-		</Style>
-
-		<Style TargetType="{x:Type Label}">
-			<Setter Property="Foreground" Value="{DynamicResource AppFg}"/>
-		</Style>
-
-		<!-- TextBox -->
-		<Style TargetType="{x:Type TextBox}">
-			<Setter Property="Foreground" Value="{DynamicResource AppFg}"/>
-			<Setter Property="Background" Value="{DynamicResource AppPanelBg}"/>
-			<Setter Property="BorderBrush" Value="{DynamicResource AppBorder}"/>
-			<Setter Property="SelectionBrush" Value="{DynamicResource AppAccent}"/>
-			<Setter Property="CaretBrush" Value="{DynamicResource AppFg}"/>
-		</Style>
-
-		<!-- Read-only TextBox (optional but nice) -->
-		<Style TargetType="{x:Type TextBox}" x:Key="ReadOnlyTextBox">
-			<Setter Property="Foreground" Value="{DynamicResource AppFg}"/>
-			<Setter Property="Background" Value="#FF1B1B1B"/>
-			<Setter Property="BorderBrush" Value="{DynamicResource AppBorder}"/>
-			<Setter Property="IsReadOnly" Value="True"/>
-		</Style>
-
-
-		<!-- Buttons -->
-		<Style TargetType="{x:Type Button}">
-			<Setter Property="Foreground" Value="{DynamicResource AppFg}"/>
-			<Setter Property="Background" Value="{DynamicResource AppPanelBg}"/>
-			<Setter Property="BorderBrush" Value="{DynamicResource AppBorder}"/>
-			<Setter Property="Padding" Value="10,4"/>
-		</Style>
-
-		<!-- GroupBox (your "System's current runtime" sections) -->
-		<Style TargetType="{x:Type GroupBox}">
-			<Setter Property="Foreground" Value="{DynamicResource AppFg}"/>
-			<Setter Property="BorderBrush" Value="{DynamicResource AppBorder}"/>
-		</Style>
-
-		<!-- If you're using these -->
-		<Style TargetType="{x:Type CheckBox}">
-			<Setter Property="Foreground" Value="{DynamicResource AppFg}"/>
-		</Style>
-
-		<Style TargetType="{x:Type RadioButton}">
-			<Setter Property="Foreground" Value="{DynamicResource AppFg}"/>
-		</Style>
-
-
-		<Style TargetType="{x:Type ComboBox}">
-			<Setter Property="Foreground" Value="{DynamicResource AppFg}"/>
-			<Setter Property="Background" Value="{DynamicResource AppPanelBg}"/>
-			<Setter Property="BorderBrush" Value="{DynamicResource AppBorder}"/>
-			<Setter Property="BorderThickness" Value="1"/>
-			<Setter Property="Padding" Value="8,3"/>
-			<Setter Property="MinHeight" Value="26"/>
-			<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-			<Setter Property="VerticalContentAlignment" Value="Center"/>
-			<Setter Property="SnapsToDevicePixels" Value="True"/>
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="{x:Type ComboBox}">
-						<Grid HorizontalAlignment="Stretch">
-							<ToggleButton x:Name="ToggleButton"
-                                  HorizontalAlignment="Stretch"
-                                  HorizontalContentAlignment="Stretch"
-                                  Focusable="False"
-                                  ClickMode="Press"
-                                  IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                  Background="{TemplateBinding Background}"
-                                  BorderBrush="{TemplateBinding BorderBrush}"
-                                  BorderThickness="{TemplateBinding BorderThickness}"
-                                  Padding="{TemplateBinding Padding}">
-
-								<Grid>
-									<Grid.ColumnDefinitions>
-										<!-- THIS is the "take all available space" column -->
-										<ColumnDefinition Width="*"/>
-										<ColumnDefinition Width="28"/>
-									</Grid.ColumnDefinitions>
-
-									<!-- Selected item -->
-									<ContentPresenter Grid.Column="0"
-                                              Margin="0"
-                                              VerticalAlignment="Center"
-                                              HorizontalAlignment="Stretch"
-                                              Content="{TemplateBinding SelectionBoxItem}"
-                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                              RecognizesAccessKey="True"/>
-
-									<!-- Arrow area -->
-									<Border Grid.Column="1"
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="1,0,0,0">
-										<Path HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"
-                                      Fill="{TemplateBinding Foreground}"
-                                      Data="M 0 0 L 4 4 L 8 0 Z"/>
-									</Border>
-								</Grid>
-							</ToggleButton>
-
-							<Popup x:Name="Popup"
-                           PlacementTarget="{Binding ElementName=ToggleButton}"
-                           Placement="Bottom"
-                           IsOpen="{TemplateBinding IsDropDownOpen}"
-                           AllowsTransparency="True"
-                           Focusable="False"
-                           PopupAnimation="Fade">
-								<Border Background="{DynamicResource AppPanelBg}"
-                                BorderBrush="{DynamicResource AppBorder}"
-                                BorderThickness="1"
-                                SnapsToDevicePixels="True"
-                                MinWidth="{Binding ActualWidth, ElementName=ToggleButton}">
-									<ScrollViewer SnapsToDevicePixels="True"
-                                          CanContentScroll="True">
-										<ItemsPresenter />
-									</ScrollViewer>
-								</Border>
-							</Popup>
-						</Grid>
-
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsEnabled" Value="False">
-								<Setter Property="Opacity" Value="0.55"/>
-							</Trigger>
-							<Trigger Property="IsMouseOver" Value="True">
-								<Setter TargetName="ToggleButton" Property="BorderBrush" Value="{DynamicResource AppAccent}"/>
-							</Trigger>
-							<Trigger Property="IsDropDownOpen" Value="True">
-								<Setter TargetName="ToggleButton" Property="BorderBrush" Value="{DynamicResource AppAccent}"/>
-							</Trigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-
-		<Style TargetType="{x:Type ComboBoxItem}">
-			<Setter Property="Foreground" Value="{DynamicResource AppFg}"/>
-			<Setter Property="Background" Value="{DynamicResource AppPanelBg}"/>
-			<Setter Property="Padding" Value="8,3"/>
-			<Setter Property="MinHeight" Value="24"/>
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="{x:Type ComboBoxItem}">
-						<Border x:Name="ItemBorder" Background="{TemplateBinding Background}">
-							<ContentPresenter VerticalAlignment="Center"/>
-						</Border>
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsHighlighted" Value="True">
-								<Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource AppSelectionBg}"/>
-								<Setter Property="Foreground" Value="Black"/>
-							</Trigger>
-							<Trigger Property="IsEnabled" Value="False">
-								<Setter Property="Opacity" Value="0.55"/>
-							</Trigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-	</Application.Resources>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>

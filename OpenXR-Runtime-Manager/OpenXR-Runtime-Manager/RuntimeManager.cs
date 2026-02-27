@@ -5,7 +5,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Microsoft.Win32;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Valve.VR;
 
 namespace OpenXR_Runtime_Manager
@@ -41,20 +42,20 @@ namespace OpenXR_Runtime_Manager
 
         private struct RuntimeInfo
         {
-            [JsonProperty("library_path")]
-            public string LibraryPath;
-            [JsonProperty("name")]
-            public string Name;
-            [JsonProperty("api_version")]
-            public string ApiVersion;
-            [JsonProperty("VALVE_runtime_is_steamvr")]
-            public bool ValveRuntimeIsSteamvr;
+            [JsonPropertyName("library_path")]
+            public string LibraryPath { get; set; }
+            [JsonPropertyName("name")]
+            public string Name { get; set; }
+            [JsonPropertyName("api_version")]
+            public string ApiVersion { get; set; }
+            [JsonPropertyName("VALVE_runtime_is_steamvr")]
+            public bool ValveRuntimeIsSteamvr { get; set; }
         }
 
         private struct RuntimeManifest
         {
-            [JsonProperty("file_format_version")] public string VersionTag;
-            [JsonProperty("runtime")] public RuntimeInfo Runtime;
+            [JsonPropertyName("file_format_version")] public string VersionTag { get; set; }
+            [JsonPropertyName("runtime")] public RuntimeInfo Runtime { get; set; }
         }
 
         private Runtime ReadManifest(string runtimeManifestPath)
@@ -64,7 +65,9 @@ namespace OpenXR_Runtime_Manager
                 using (StreamReader r = new StreamReader(Environment.ExpandEnvironmentVariables(runtimeManifestPath)))
                 {
                     var json = r.ReadToEnd();
-                    var manifest = JsonConvert.DeserializeObject<RuntimeManifest>(json);
+                    var manifest = JsonSerializer.Deserialize<RuntimeManifest>(json);
+                    if (manifest.Runtime.LibraryPath == null)
+                        throw new InvalidDataException("Runtime manifest did not include runtime.library_path");
 
                     return new Runtime(manifest.Runtime.Name, runtimeManifestPath,
                         manifest.Runtime.LibraryPath, new Version(1));

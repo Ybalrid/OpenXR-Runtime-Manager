@@ -21,6 +21,6 @@ If a runtime is not being recognized (path not presentin the `AvailableRuntimes`
 
 ## Legal
 
-Copyright :copyright: 2021-2024 Arthur Brainville (Ybalrid) - Licensed under the terms of the MIT License agreement.
+Copyright :copyright: 2021-2026 Arthur Brainville (Ybalrid) - Licensed under the terms of the MIT License agreement.
 
 *OpenXR™ is a trademark owned by The Khronos Group Inc. and is registered as a trademark in China, the European Union, Japan and the United Kingdom.*

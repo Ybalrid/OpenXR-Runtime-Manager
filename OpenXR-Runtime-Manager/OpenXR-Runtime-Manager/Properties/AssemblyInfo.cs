@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("OpenXR-Runtime-Manager")]
-[assembly: AssemblyCopyright("Copyright © 2021-2022 Arthur Brainville (Ybalrid)")]
+[assembly: AssemblyCopyright("Copyright © 2021-2026 Arthur Brainville (Ybalrid)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

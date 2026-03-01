@@ -17,6 +17,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="16" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <GroupBox Header="System's current runtime" Padding="14">
@@ -84,13 +85,16 @@
                           MinHeight="34"
                           VerticalContentAlignment="Center" />
 
-                <Button Grid.Row="2"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Name="ChangeSystemRuntime"
-                        MinHeight="42"
-                        Click="ChangeSystemRuntime_OnClick">Set selected runtime as system's active runtime</Button>
+                
             </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="4" >
+            <Button Width="Auto"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Name="ChangeSystemRuntime"
+                    MinHeight="42"
+                    Click="ChangeSystemRuntime_OnClick">Set selected runtime as system's active runtime</Button>
         </GroupBox>
     </Grid>
 </Window>

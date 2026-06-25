@@ -96,6 +96,12 @@ namespace OpenXR_Runtime_Manager
                     if (availableRuntimesKey.GetValue(runtimeManifestPath).Equals(0))
                     {
                         var availableRuntimeManifest = ReadManifest(runtimeManifestPath);
+                        if (availableRuntimeManifest == null)
+                        {
+                            Debug.Print($"Failed to parse manifest file: {runtimeManifestPath}");
+                            continue;
+                        }
+
                         Debug.Print($"Read manifest for {availableRuntimeManifest.Name}");
                         if (availableRuntimes != null)
                         {

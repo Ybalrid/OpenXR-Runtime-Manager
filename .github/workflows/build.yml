@@ -18,6 +18,7 @@ env:
   PROJECT_PATH: OpenXR-Runtime-Manager/OpenXR-Runtime-Manager/OpenXR-Runtime-Manager.csproj
   RUNTIME_IDENTIFIER: win-x64
   PUBLISH_PATH: artifacts/publish
+  INSTALLER_PATH: artifacts/installer
   DOTNET_CLI_TELEMETRY_OPTOUT: "1"
   DOTNET_NOLOGO: "1"
 
@@ -51,4 +52,47 @@ jobs:
         with:
           name: OpenXR-Runtime-Manager-win-x64
           path: ${{ env.PUBLISH_PATH }}
+          if-no-files-found: error
+
+  installer:
+    name: Build Inno Setup installer
+    runs-on: windows-latest
+    needs: build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Download executable artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: OpenXR-Runtime-Manager-win-x64
+          path: ${{ env.PUBLISH_PATH }}
+
+      - name: Read app version
+        shell: pwsh
+        run: |
+          $assemblyInfo = Get-Content "OpenXR-Runtime-Manager/OpenXR-Runtime-Manager/Properties/AssemblyInfo.cs" -Raw
+          if ($assemblyInfo -notmatch 'AssemblyFileVersion\("([^"]+)"\)') {
+              throw "Could not find AssemblyFileVersion in AssemblyInfo.cs"
+          }
+          "APP_VERSION=$($matches[1])" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Install Inno Setup
+        run: choco install innosetup --yes --no-progress
+
+      - name: Build installer
+        shell: pwsh
+        env:
+          PUBLISH_DIR: ${{ github.workspace }}\${{ env.PUBLISH_PATH }}
+          INSTALLER_DIR: ${{ github.workspace }}\${{ env.INSTALLER_PATH }}
+        run: |
+          New-Item -ItemType Directory -Force "$env:INSTALLER_DIR" | Out-Null
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "installer/OpenXR-Runtime-Manager.iss"
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: OpenXR-Runtime-Manager-Setup
+          path: ${{ env.INSTALLER_PATH }}/*.exe
           if-no-files-found: error

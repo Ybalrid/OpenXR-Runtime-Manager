@@ -24,6 +24,8 @@ namespace OpenXR_Runtime_Manager
         private readonly Dictionary<string, Runtime> _availableRuntimes = new Dictionary<string, Runtime>();
         private Runtime _activeRuntime = null;
 
+        private const int MAX_PATH = 260;
+
         public bool HasActiveRuntime => _activeRuntime != null;
         public Runtime ActiveRuntime => _activeRuntime;
 
@@ -182,8 +184,8 @@ namespace OpenXR_Runtime_Manager
         /// <returns>True upon success. </returns>
         private bool ProbeForSteamVRInstallationPath()
         {
-            StringBuilder pathBuilder = new StringBuilder(256);
-            uint bufferSize = 256;
+            StringBuilder pathBuilder = new StringBuilder(260);
+            uint bufferSize = 260;
             try
             {
                 if (OpenVRInterop.GetRuntimePath(pathBuilder, bufferSize, ref bufferSize))

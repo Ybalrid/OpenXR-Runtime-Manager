@@ -1,5 +1,7 @@
 # OpenXR Runtime Manager
 
+[![Build](https://github.com/Ybalrid/OpenXR-Runtime-Manager/actions/workflows/build.yml/badge.svg)](https://github.com/Ybalrid/OpenXR-Runtime-Manager/actions/workflows/build.yml)
+
 Small utility program that permit see the current OpenXR runtime, and select another one.
 
 ![Small GIF showing the UI of this program](./ui.gif)

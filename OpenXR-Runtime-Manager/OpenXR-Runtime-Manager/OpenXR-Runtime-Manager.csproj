@@ -23,6 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="OpenXR_LogoBug_48px_Nov17.ico" />
+
     <None Update="openvr_api.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

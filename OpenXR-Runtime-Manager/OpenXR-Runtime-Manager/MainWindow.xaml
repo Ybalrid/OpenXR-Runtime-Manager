@@ -65,6 +65,13 @@
                          IsReadOnlyCaretVisible="True">N/A</TextBox>
             </Grid>
         </GroupBox>
+        <Image HorizontalAlignment="Right"
+               VerticalAlignment="Top"
+               Margin="0,5,14,0"
+               Width="48"
+               Height="48"
+               Source="pack://application:,,,/OpenXR_LogoBug_48px_Nov17.ico"
+               Stretch="Uniform" />
 
         <GroupBox Grid.Row="2" Header="System's detected runtimes" Padding="14">
             <Grid>
@@ -88,7 +95,7 @@
                 
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="4" >
+        <GroupBox Grid.Row="3">
             <Button Width="Auto"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
